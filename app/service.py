@@ -22,14 +22,14 @@ def get_city_coordinates(city_name: str) -> dict:
 
     responce = requests.get(geocoding_api_url, geocoding_api_params)
 
-    if responce.status_code == 200:
+    if responce.status_code == 200 and responce.json():
         data = responce.json()
         return {
             "lat": data[0]["lat"],
             "lon": data[0]["lon"]
         }, responce.status_code
     else:
-        return f"Error {responce.status_code}", responce.status_code
+        return [], responce.status_code
     
 def get_city_weather(city_name: str) -> dict:
     "Function to get city weather using get_city_coordinates function"
@@ -38,7 +38,7 @@ def get_city_weather(city_name: str) -> dict:
     # https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
 
     city_coordinates, status_code = get_city_coordinates(city_name=city_name)
-    if status_code != 200:
+    if status_code != 200 or not city_coordinates:
         return f"Error {status_code}", status_code
 
     weather_api_url = "https://api.openweathermap.org/data/2.5/weather"

@@ -6,7 +6,7 @@ dotenv.load_dotenv()
 
 OpenWeatherMap_API_key = os.getenv("OpenWeatherMap_API_key")
 
-def get_city_coordinates(city_name: str) -> dict:
+def get_city_coordinates(city_name: str): 
     """Function to get city coordinates just by name
     It returns most probable answer based on population of the city"""
 
@@ -27,24 +27,24 @@ def get_city_coordinates(city_name: str) -> dict:
         return {
             "lat": data[0]["lat"],
             "lon": data[0]["lon"]
-        }, responce.status_code
+        }
     else:
-        return [], responce.status_code
+        return None
     
-def get_city_weather(city_name: str) -> dict:
+def get_city_weather(city_name: str):
     "Function to get city weather using get_city_coordinates function"
 
     # example url
     # https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
 
-    city_coordinates, status_code = get_city_coordinates(city_name=city_name)
-    if status_code != 200 or not city_coordinates:
-        return f"Error {status_code}", status_code
+    city_coordinates = get_city_coordinates(city_name=city_name)
+    if not city_coordinates:
+        return None
 
     weather_api_url = "https://api.openweathermap.org/data/2.5/weather"
     weather_api_params = {
-        "lat": city_coordinates["lat"],
-        "lon": city_coordinates["lon"],
+        "lat": city_coordinates["lat"], 
+        "lon": city_coordinates["lon"], 
         "appid": OpenWeatherMap_API_key,
         "units": "metric"
     }
@@ -53,6 +53,6 @@ def get_city_weather(city_name: str) -> dict:
 
     if responce.status_code == 200:
         data = responce.json()
-        return data, responce.status_code
+        return data
     else:
-        return f"Error {responce.status_code}", responce.status_code
+        return None

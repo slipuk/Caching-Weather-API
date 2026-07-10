@@ -5,7 +5,7 @@ import redis.asyncio as redis
 
 redis_client = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
 
-def cache_responce(tt1: int = 300, prefix: str = "cache"):
+def cache_responce(ttl: int = 300, prefix: str = "cache"):
     def decorator(func):
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
@@ -19,7 +19,7 @@ def cache_responce(tt1: int = 300, prefix: str = "cache"):
             result = await func(*args, **kwargs)
 
             if result is not None:
-                await redis_client.set(cache_key, json.dumps(result), ex=tt1)
+                await redis_client.set(cache_key, json.dumps(result), ex=ttl)
             return result
         return wrapper
     return decorator

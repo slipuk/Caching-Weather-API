@@ -1,11 +1,16 @@
 import httpx
 import dotenv
 import os
+from decorators import cache_responce
 
 dotenv.load_dotenv()
 
 OpenWeatherMap_API_key = os.getenv("OpenWeatherMap_API_key")
+# 60 sec * 60 min * 24h * 30 days
+# city coordinates never change 
+month_in_seconds = 60 * 60 * 24 * 30
 
+@cache_responce(ttl=month_in_seconds, prefix="coords")
 async def get_city_coordinates(city_name: str): 
     """Function to get city coordinates just by name
     It returns most probable answer based on population of the city"""
@@ -31,6 +36,7 @@ async def get_city_coordinates(city_name: str):
     else:
         return None
     
+@cache_responce(ttl=600, prefix="weather")
 async def get_city_weather(city_name: str):
     "Function to get city weather using get_city_coordinates function"
 

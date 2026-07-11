@@ -2,6 +2,7 @@ import httpx
 import dotenv
 import os
 from decorators import cache_responce
+from fastapi import HTTPException
 
 dotenv.load_dotenv()
 
@@ -34,7 +35,10 @@ async def get_city_coordinates(city_name: str):
             "lon": data[0]["lon"]
         }
     else:
-        return None
+        raise HTTPException(
+            status_code=404,
+            detail=f"City with {city_name} was not found."
+        )
     
 @cache_responce(ttl=600, prefix="weather")
 async def get_city_weather(city_name: str):
@@ -44,8 +48,6 @@ async def get_city_weather(city_name: str):
     # https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
 
     city_coordinates = await get_city_coordinates(city_name=city_name)
-    if not city_coordinates:
-        return None
 
     weather_api_url = "https://api.openweathermap.org/data/2.5/weather"
     weather_api_params = {
@@ -61,4 +63,7 @@ async def get_city_weather(city_name: str):
         data = responce.json()
         return data
     else:
-        return None
+        raise HTTPException(
+            status_code=404,
+            detail=f"Could not fetch data for {city_name}"
+        )

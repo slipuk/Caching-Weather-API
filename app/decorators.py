@@ -38,7 +38,7 @@ def rate_limit(max_requests: int = 10, window_seconds: int = 60):
                 await redis_client.expire(ratelimit_key, window_seconds)
 
             if current > max_requests:
-                ttl = redis_client.ttl(ratelimit_key)
+                ttl = await redis_client.ttl(ratelimit_key)
                 raise HTTPException(
                     status_code=429,
                     detail=f"Too many requests. Try again in {ttl} seconds."

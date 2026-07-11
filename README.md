@@ -2,6 +2,10 @@
 
 A small FastAPI service that returns current weather for a city name. It sits in front of the [OpenWeatherMap](https://openweathermap.org/api) API, caches results in Redis to cut down on external calls, and rate-limits clients per IP.
 
+## Project URL
+
+https://roadmap.sh/projects/weather-api-wrapper-service
+
 ## Features
 
 - **City weather lookup** — resolves a city name to coordinates, then fetches current weather.
@@ -36,16 +40,20 @@ OpenWeatherMap Geocoding API → OpenWeatherMap Weather API
 
 ### Project structure
 
-```
-.
-├── main.py            # FastAPI app entrypoint
-├── routes.py           # API routes
-├── service.py           # OpenWeatherMap integration (geocoding + weather)
-├── decorators.py         # cache_response and rate_limit decorators, Redis client
-├── test_concurency.py      # fires concurrent requests to check caching / async behavior
-├── test_ratelimit.py       # fires repeated requests to check rate limiting
-├── requirements.txt
-└── .gitignore
+```bash
+└── Caching-Weather-API/
+    ├── app/
+    │   ├── main.py               # FastAPI app entrypoint
+    │   ├── routes.py             # API routes
+    │   ├── service.py            # OpenWeatherMap integration (geocoding + weather)
+    │   └── decorators.py         # cache_response and rate_limit decorators, Redis client
+    ├── tests/
+    │   ├── test_concurency.py    # fires concurrent requests to check caching / async behavior
+    │   └── test_ratelimit.py     # fires repeated requests to check rate limiting
+    ├── README.md
+    ├── requirements.txt
+    ├── .env
+    └── .gitignore
 ```
 
 ## How caching works

@@ -12,7 +12,7 @@ async def helth_check(request: Request) -> dict:
 
 @router.get("/api/city/{city_name}")
 @rate_limit(max_requests=10, window_seconds=60)
-async def get_weather(request: Request, city_name: str) -> dict:
+async def get_weather(request: Request ,city_name: str) -> dict:
     data = await service.get_city_weather(city_name=city_name)
     return data
     
